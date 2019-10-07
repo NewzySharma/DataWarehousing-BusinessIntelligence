@@ -1,0 +1,304 @@
+--
+-- ER/Studio Data Architect SQL Code Generation
+-- Project :      NewModel.DM1
+--
+-- Date Created : Wednesday, September 25, 2019 21:21:29
+-- Target DBMS : MySQL 5.x
+--
+
+-- 
+-- TABLE: Album 
+--
+
+CREATE TABLE Album(
+    AlbumId     INT                      NOT NULL,
+    Title       NATIONAL VARCHAR(160)    NOT NULL,
+    ArtistId    INT                      NOT NULL,
+    PRIMARY KEY (AlbumId)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Artist 
+--
+
+CREATE TABLE Artist(
+    ArtistId    INT                      NOT NULL,
+    Name        NATIONAL VARCHAR(120),
+    PRIMARY KEY (ArtistId)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Customer 
+--
+
+CREATE TABLE Customer(
+    CustomerId       INT                     NOT NULL,
+    FirstName        NATIONAL VARCHAR(40)    NOT NULL,
+    LastName         NATIONAL VARCHAR(20)    NOT NULL,
+    Company          NATIONAL VARCHAR(80),
+    Phone            NATIONAL VARCHAR(24),
+    Fax              NATIONAL VARCHAR(24),
+    Email            NATIONAL VARCHAR(60)    NOT NULL,
+    SupportRepId     INT,
+    LocationId_sk    INT,
+    PRIMARY KEY (CustomerId)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: DateDim 
+--
+
+CREATE TABLE DateDim(
+    DateKey_sk        INT            NOT NULL,
+    Date_nk           DATE           NOT NULL,
+    State             VARCHAR(18)    NOT NULL,
+    Day               TINYINT        NOT NULL,
+    WeekDay           TINYINT        NOT NULL,
+    PostalCode        VARCHAR(10)    NOT NULL,
+    DayOfMonth        TINYINT        NOT NULL,
+    DayOfYear         SMALLINT       NOT NULL,
+    WeekOfMonth       TINYINT        NOT NULL,
+    WeekOfYear        TINYINT        NOT NULL,
+    Month             TINYINT        NOT NULL,
+    MonthName         VARCHAR(10)    NOT NULL,
+    Year              INT            NOT NULL,
+    MMYYYY            CHAR(6)        NOT NULL,
+    IsWeekend         BIT(1),
+    Quarter           TINYINT,
+    QuarterOfMonth    TINYINT,
+    QuarterOfYear     TINYINT        NOT NULL,
+    PRIMARY KEY (DateKey_sk)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Employee 
+--
+
+CREATE TABLE Employee(
+    EmployeeId       INT                     NOT NULL,
+    LastName         NATIONAL VARCHAR(20)    NOT NULL,
+    FirstName        NATIONAL VARCHAR(20)    NOT NULL,
+    Title            NATIONAL VARCHAR(30),
+    ReportsTo        INT,
+    BirthDate        DATETIME,
+    HireDate         DATETIME,
+    Phone            NATIONAL VARCHAR(24),
+    Fax              NATIONAL VARCHAR(24),
+    Email            NATIONAL VARCHAR(60),
+    LocationId_sk    INT,
+    PRIMARY KEY (EmployeeId)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Genre 
+--
+
+CREATE TABLE Genre(
+    GenreId    INT                      NOT NULL,
+    Name       NATIONAL VARCHAR(120),
+    PRIMARY KEY (GenreId)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Invoice 
+--
+
+CREATE TABLE Invoice(
+    InvoiceId        INT         NOT NULL,
+    CustomerId       INT         NOT NULL,
+    InvoiceDate      DATETIME    NOT NULL,
+    LocationId_sk    INT,
+    PRIMARY KEY (InvoiceId)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Location 
+--
+
+CREATE TABLE Location(
+    LocationId_sk    INT                     NOT NULL,
+    Country          VARCHAR(18)             NOT NULL,
+    State            VARCHAR(18)             NOT NULL,
+    City             NATIONAL VARCHAR(70),
+    Address          NATIONAL VARCHAR(40),
+    PostalCode       NATIONAL VARCHAR(10),
+    PRIMARY KEY (LocationId_sk)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: MediaType 
+--
+
+CREATE TABLE MediaType(
+    MediaTypeId    INT                      NOT NULL,
+    Name           NATIONAL VARCHAR(120),
+    PRIMARY KEY (MediaTypeId)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Playlist 
+--
+
+CREATE TABLE Playlist(
+    PlaylistId    INT                      NOT NULL,
+    Name          NATIONAL VARCHAR(120),
+    PRIMARY KEY (PlaylistId)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Track_fact 
+--
+
+CREATE TABLE Track_fact(
+    TrackId         INT                      NOT NULL,
+    DateKey_sk      INT                      NOT NULL,
+    Quantity        DECIMAL(10, 0)           NOT NULL,
+    Total           DECIMAL(10, 0)           NOT NULL,
+    Name            NATIONAL VARCHAR(200)    NOT NULL,
+    AlbumId         INT,
+    MediaTypeId     INT                      NOT NULL,
+    GenreId         INT,
+    Composer        NATIONAL VARCHAR(220),
+    Milliseconds    INT                      NOT NULL,
+    Bytes           INT,
+    UnitPrice       DECIMAL(10, 2)           NOT NULL,
+    PlaylistId      INT                      NOT NULL,
+    InvoiceId       INT                      NOT NULL,
+    CustomerId      INT                      NOT NULL,
+    EmployeeId      INT,
+    PRIMARY KEY (TrackId)
+)ENGINE=MYISAM
+;
+
+
+
+-- 
+-- TABLE: Album 
+--
+
+ALTER TABLE Album ADD CONSTRAINT FK_AlbumArtistId 
+    FOREIGN KEY (ArtistId)
+    REFERENCES Artist(ArtistId)
+;
+
+
+-- 
+-- TABLE: Customer 
+--
+
+ALTER TABLE Customer ADD CONSTRAINT RefLocation14 
+    FOREIGN KEY (LocationId_sk)
+    REFERENCES Location(LocationId_sk) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE Customer ADD CONSTRAINT FK_CustomerSupportRepId 
+    FOREIGN KEY (SupportRepId)
+    REFERENCES Employee(EmployeeId)
+;
+
+
+-- 
+-- TABLE: Employee 
+--
+
+ALTER TABLE Employee ADD CONSTRAINT RefLocation13 
+    FOREIGN KEY (LocationId_sk)
+    REFERENCES Location(LocationId_sk) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE Employee ADD CONSTRAINT FK_EmployeeReportsTo 
+    FOREIGN KEY (ReportsTo)
+    REFERENCES Employee(EmployeeId)
+;
+
+
+-- 
+-- TABLE: Invoice 
+--
+
+ALTER TABLE Invoice ADD CONSTRAINT RefLocation15 
+    FOREIGN KEY (LocationId_sk)
+    REFERENCES Location(LocationId_sk) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE Invoice ADD CONSTRAINT FK_InvoiceCustomerId 
+    FOREIGN KEY (CustomerId)
+    REFERENCES Customer(CustomerId)
+;
+
+
+-- 
+-- TABLE: Track_fact 
+--
+
+ALTER TABLE Track_fact ADD CONSTRAINT RefInvoice17 
+    FOREIGN KEY (InvoiceId)
+    REFERENCES Invoice(InvoiceId) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE Track_fact ADD CONSTRAINT RefCustomer18 
+    FOREIGN KEY (CustomerId)
+    REFERENCES Customer(CustomerId) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE Track_fact ADD CONSTRAINT RefEmployee19 
+    FOREIGN KEY (EmployeeId)
+    REFERENCES Employee(EmployeeId) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE Track_fact ADD CONSTRAINT RefDateDim12 
+    FOREIGN KEY (DateKey_sk)
+    REFERENCES DateDim(DateKey_sk) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE Track_fact ADD CONSTRAINT RefPlaylist16 
+    FOREIGN KEY (PlaylistId)
+    REFERENCES Playlist(PlaylistId) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE Track_fact ADD CONSTRAINT FK_TrackAlbumId 
+    FOREIGN KEY (AlbumId)
+    REFERENCES Album(AlbumId)
+;
+
+ALTER TABLE Track_fact ADD CONSTRAINT FK_TrackGenreId 
+    FOREIGN KEY (GenreId)
+    REFERENCES Genre(GenreId)
+;
+
+ALTER TABLE Track_fact ADD CONSTRAINT FK_TrackMediaTypeId 
+    FOREIGN KEY (MediaTypeId)
+    REFERENCES MediaType(MediaTypeId)
+;
+
+

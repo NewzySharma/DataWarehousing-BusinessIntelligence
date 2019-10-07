@@ -1,0 +1,304 @@
+--
+-- ER/Studio Data Architect SQL Code Generation
+-- Project :      NewModel.DM1
+--
+-- Date Created : Wednesday, September 25, 2019 21:23:46
+-- Target DBMS : PostgreSQL 9.x
+--
+
+-- 
+-- TABLE: "Album" 
+--
+
+CREATE TABLE "Album"(
+    "AlbumId"   int4            NOT NULL,
+    "Title"     varchar(160)    NOT NULL,
+    "ArtistId"  int4            NOT NULL,
+    CONSTRAINT "PK_Album" PRIMARY KEY ("AlbumId")
+)
+;
+
+
+
+-- 
+-- TABLE: "Artist" 
+--
+
+CREATE TABLE "Artist"(
+    "ArtistId"  int4            NOT NULL,
+    "Name"      varchar(120),
+    CONSTRAINT "PK_Artist" PRIMARY KEY ("ArtistId")
+)
+;
+
+
+
+-- 
+-- TABLE: "Customer" 
+--
+
+CREATE TABLE "Customer"(
+    "CustomerId"     int4           NOT NULL,
+    "FirstName"      varchar(40)    NOT NULL,
+    "LastName"       varchar(20)    NOT NULL,
+    "Company"        varchar(80),
+    "Phone"          varchar(24),
+    "Fax"            varchar(24),
+    "Email"          varchar(60)    NOT NULL,
+    "SupportRepId"   int4,
+    "LocationId_sk"  int4,
+    CONSTRAINT "PK_Customer" PRIMARY KEY ("CustomerId")
+)
+;
+
+
+
+-- 
+-- TABLE: "DateDim" 
+--
+
+CREATE TABLE "DateDim"(
+    "DateKey_sk"      int4           NOT NULL,
+    "Date_nk"         date           NOT NULL,
+    "State"           varchar(18)    NOT NULL,
+    "Day"             int2           NOT NULL,
+    "WeekDay"         int2           NOT NULL,
+    "PostalCode"      varchar(10)    NOT NULL,
+    "DayOfMonth"      int2           NOT NULL,
+    "DayOfYear"       int2           NOT NULL,
+    "WeekOfMonth"     int2           NOT NULL,
+    "WeekOfYear"      int2           NOT NULL,
+    "Month"           int2           NOT NULL,
+    "MonthName"       varchar(10)    NOT NULL,
+    "Year"            int4           NOT NULL,
+    "MMYYYY"          char(6)        NOT NULL,
+    "IsWeekend"       boolean,
+    "Quarter"         int2,
+    "QuarterOfMonth"  int2,
+    "QuarterOfYear"   int2           NOT NULL,
+    CONSTRAINT "PK_Invoice_1_1" PRIMARY KEY ("DateKey_sk")
+)
+;
+
+
+
+-- 
+-- TABLE: "Employee" 
+--
+
+CREATE TABLE "Employee"(
+    "EmployeeId"     int4           NOT NULL,
+    "LastName"       varchar(20)    NOT NULL,
+    "FirstName"      varchar(20)    NOT NULL,
+    "Title"          varchar(30),
+    "ReportsTo"      int4,
+    "BirthDate"      timestamp,
+    "HireDate"       timestamp,
+    "Phone"          varchar(24),
+    "Fax"            varchar(24),
+    "Email"          varchar(60),
+    "LocationId_sk"  int4,
+    CONSTRAINT "PK_Employee" PRIMARY KEY ("EmployeeId")
+)
+;
+
+
+
+-- 
+-- TABLE: "Genre" 
+--
+
+CREATE TABLE "Genre"(
+    "GenreId"  int4            NOT NULL,
+    "Name"     varchar(120),
+    CONSTRAINT "PK_Genre" PRIMARY KEY ("GenreId")
+)
+;
+
+
+
+-- 
+-- TABLE: "Invoice" 
+--
+
+CREATE TABLE "Invoice"(
+    "InvoiceId"      int4         NOT NULL,
+    "CustomerId"     int4         NOT NULL,
+    "InvoiceDate"    timestamp    NOT NULL,
+    "LocationId_sk"  int4,
+    CONSTRAINT "PK_Invoice" PRIMARY KEY ("InvoiceId")
+)
+;
+
+
+
+-- 
+-- TABLE: "Location" 
+--
+
+CREATE TABLE "Location"(
+    "LocationId_sk"  int4           NOT NULL,
+    "Country"        varchar(18)    NOT NULL,
+    "State"          varchar(18)    NOT NULL,
+    "City"           varchar(70),
+    "Address"        varchar(40),
+    "PostalCode"     varchar(10),
+    CONSTRAINT "PK_Invoice_1" PRIMARY KEY ("LocationId_sk")
+)
+;
+
+
+
+-- 
+-- TABLE: "MediaType" 
+--
+
+CREATE TABLE "MediaType"(
+    "MediaTypeId"  int4            NOT NULL,
+    "Name"         varchar(120),
+    CONSTRAINT "PK_MediaType" PRIMARY KEY ("MediaTypeId")
+)
+;
+
+
+
+-- 
+-- TABLE: "Playlist" 
+--
+
+CREATE TABLE "Playlist"(
+    "PlaylistId"  int4            NOT NULL,
+    "Name"        varchar(120),
+    CONSTRAINT "PK_Playlist" PRIMARY KEY ("PlaylistId")
+)
+;
+
+
+
+-- 
+-- TABLE: "Track_fact" 
+--
+
+CREATE TABLE "Track_fact"(
+    "TrackId"       int4              NOT NULL,
+    "DateKey_sk"    int4              NOT NULL,
+    "Quantity"      numeric(10, 0)    NOT NULL,
+    "Total"         numeric(10, 0)    NOT NULL,
+    "Name"          varchar(200)      NOT NULL,
+    "AlbumId"       int4,
+    "MediaTypeId"   int4              NOT NULL,
+    "GenreId"       int4,
+    "Composer"      varchar(220),
+    "Milliseconds"  int4              NOT NULL,
+    "Bytes"         int4,
+    "UnitPrice"     numeric(10, 2)    NOT NULL,
+    "PlaylistId"    int4              NOT NULL,
+    "InvoiceId"     int4              NOT NULL,
+    "CustomerId"    int4              NOT NULL,
+    "EmployeeId"    int4,
+    CONSTRAINT "PK_Track" PRIMARY KEY ("TrackId")
+)
+;
+
+
+
+-- 
+-- TABLE: "Album" 
+--
+
+ALTER TABLE "Album" ADD CONSTRAINT "FK_AlbumArtistId" 
+    FOREIGN KEY ("ArtistId")
+    REFERENCES "Artist"("ArtistId")
+;
+
+
+-- 
+-- TABLE: "Customer" 
+--
+
+ALTER TABLE "Customer" ADD CONSTRAINT "RefLocation14" 
+    FOREIGN KEY ("LocationId_sk")
+    REFERENCES "Location"("LocationId_sk") ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE "Customer" ADD CONSTRAINT "FK_CustomerSupportRepId" 
+    FOREIGN KEY ("SupportRepId")
+    REFERENCES "Employee"("EmployeeId")
+;
+
+
+-- 
+-- TABLE: "Employee" 
+--
+
+ALTER TABLE "Employee" ADD CONSTRAINT "RefLocation13" 
+    FOREIGN KEY ("LocationId_sk")
+    REFERENCES "Location"("LocationId_sk") ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE "Employee" ADD CONSTRAINT "FK_EmployeeReportsTo" 
+    FOREIGN KEY ("ReportsTo")
+    REFERENCES "Employee"("EmployeeId")
+;
+
+
+-- 
+-- TABLE: "Invoice" 
+--
+
+ALTER TABLE "Invoice" ADD CONSTRAINT "RefLocation15" 
+    FOREIGN KEY ("LocationId_sk")
+    REFERENCES "Location"("LocationId_sk") ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE "Invoice" ADD CONSTRAINT "FK_InvoiceCustomerId" 
+    FOREIGN KEY ("CustomerId")
+    REFERENCES "Customer"("CustomerId")
+;
+
+
+-- 
+-- TABLE: "Track_fact" 
+--
+
+ALTER TABLE "Track_fact" ADD CONSTRAINT "RefInvoice17" 
+    FOREIGN KEY ("InvoiceId")
+    REFERENCES "Invoice"("InvoiceId") ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE "Track_fact" ADD CONSTRAINT "RefCustomer18" 
+    FOREIGN KEY ("CustomerId")
+    REFERENCES "Customer"("CustomerId") ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE "Track_fact" ADD CONSTRAINT "RefEmployee19" 
+    FOREIGN KEY ("EmployeeId")
+    REFERENCES "Employee"("EmployeeId") ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE "Track_fact" ADD CONSTRAINT "RefDateDim12" 
+    FOREIGN KEY ("DateKey_sk")
+    REFERENCES "DateDim"("DateKey_sk") ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE "Track_fact" ADD CONSTRAINT "RefPlaylist16" 
+    FOREIGN KEY ("PlaylistId")
+    REFERENCES "Playlist"("PlaylistId") ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE "Track_fact" ADD CONSTRAINT "FK_TrackAlbumId" 
+    FOREIGN KEY ("AlbumId")
+    REFERENCES "Album"("AlbumId")
+;
+
+ALTER TABLE "Track_fact" ADD CONSTRAINT "FK_TrackGenreId" 
+    FOREIGN KEY ("GenreId")
+    REFERENCES "Genre"("GenreId")
+;
+
+ALTER TABLE "Track_fact" ADD CONSTRAINT "FK_TrackMediaTypeId" 
+    FOREIGN KEY ("MediaTypeId")
+    REFERENCES "MediaType"("MediaTypeId")
+;
+
+
