@@ -1,0 +1,1015 @@
+--
+-- ER/Studio Data Architect SQL Code Generation
+-- Project :      DATA MODEL
+--
+-- Date Created : Saturday, September 28, 2019 22:55:21
+-- Target DBMS : PostgreSQL 9.x
+--
+
+-- 
+-- TABLE: "AdventureWorksDWBuildVersion" 
+--
+
+CREATE TABLE "AdventureWorksDWBuildVersion"(
+    "DBVersion"    varchar(50),
+    "VersionDate"  timestamp
+)
+;
+
+
+
+-- 
+-- TABLE: "DatabaseLog" 
+--
+
+CREATE TABLE "DatabaseLog"(
+    "DatabaseLogID"  int4             NOT NULL,
+    "PostTime"       timestamp        NOT NULL,
+    "DatabaseUser"   char(10)         NOT NULL,
+    "Event"          char(10)         NOT NULL,
+    "Schema"         char(10),
+    "Object"         char(10),
+    "TSQL"           varchar(4000)    NOT NULL,
+    "XmlEvent"       xml              NOT NULL,
+    CONSTRAINT "PK_DatabaseLog_DatabaseLogID" PRIMARY KEY ("DatabaseLogID")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimAccount" 
+--
+
+CREATE TABLE "DimAccount"(
+    "AccountKey"                     int4            NOT NULL,
+    "ParentAccountKey"               int4,
+    "AccountCodeAlternateKey"        int4,
+    "ParentAccountCodeAlternateKey"  int4,
+    "AccountDescription"             varchar(50),
+    "AccountType"                    varchar(50),
+    "Operator"                       varchar(50),
+    "CustomMembers"                  varchar(300),
+    "ValueType"                      varchar(50),
+    "CustomMemberOptions"            varchar(200),
+    CONSTRAINT "PK_DimAccount" PRIMARY KEY ("AccountKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimCurrency" 
+--
+
+CREATE TABLE "DimCurrency"(
+    "CurrencyKey"           int4           NOT NULL,
+    "CurrencyAlternateKey"  char(3)        NOT NULL,
+    "CurrencyName"          varchar(50)    NOT NULL,
+    CONSTRAINT "PK_DimCurrency_CurrencyKey" PRIMARY KEY ("CurrencyKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimCustomer" 
+--
+
+CREATE TABLE "DimCustomer"(
+    "CustomerKey"           int4            NOT NULL,
+    "GeographyKey"          int4,
+    "CustomerAlternateKey"  varchar(15)     NOT NULL,
+    "Title"                 varchar(8),
+    "FirstName"             varchar(50),
+    "MiddleName"            varchar(50),
+    "LastName"              varchar(50),
+    "NameStyle"             boolean,
+    "BirthDate"             date,
+    "MaritalStatus"         char(1),
+    "Suffix"                varchar(10),
+    "Gender"                varchar(1),
+    "EmailAddress"          varchar(50),
+    "YearlyIncome"          money,
+    "TotalChildren"         int2,
+    "NumberChildrenAtHome"  int2,
+    "EnglishEducation"      varchar(40),
+    "SpanishEducation"      varchar(40),
+    "FrenchEducation"       varchar(40),
+    "EnglishOccupation"     varchar(100),
+    "SpanishOccupation"     varchar(100),
+    "FrenchOccupation"      varchar(100),
+    "HouseOwnerFlag"        char(1),
+    "NumberCarsOwned"       int2,
+    "AddressLine1"          varchar(120),
+    "AddressLine2"          varchar(120),
+    "Phone"                 varchar(20),
+    "DateFirstPurchase"     date,
+    "CommuteDistance"       varchar(15),
+    CONSTRAINT "PK_DimCustomer_CustomerKey" PRIMARY KEY ("CustomerKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimDate" 
+--
+
+CREATE TABLE "DimDate"(
+    "DateKey"               int4           NOT NULL,
+    "FullDateAlternateKey"  date           NOT NULL,
+    "DayNumberOfWeek"       int2           NOT NULL,
+    "EnglishDayNameOfWeek"  varchar(10)    NOT NULL,
+    "SpanishDayNameOfWeek"  varchar(10)    NOT NULL,
+    "FrenchDayNameOfWeek"   varchar(10)    NOT NULL,
+    "DayNumberOfMonth"      int2           NOT NULL,
+    "DayNumberOfYear"       int2           NOT NULL,
+    "WeekNumberOfYear"      int2           NOT NULL,
+    "EnglishMonthName"      varchar(10)    NOT NULL,
+    "SpanishMonthName"      varchar(10)    NOT NULL,
+    "FrenchMonthName"       varchar(10)    NOT NULL,
+    "MonthNumberOfYear"     int2           NOT NULL,
+    "CalendarQuarter"       int2           NOT NULL,
+    "CalendarYear"          int2           NOT NULL,
+    "CalendarSemester"      int2           NOT NULL,
+    "FiscalQuarter"         int2           NOT NULL,
+    "FiscalYear"            int2           NOT NULL,
+    "FiscalSemester"        int2           NOT NULL,
+    CONSTRAINT "PK_DimDate_DateKey" PRIMARY KEY ("DateKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimDepartmentGroup" 
+--
+
+CREATE TABLE "DimDepartmentGroup"(
+    "DepartmentGroupKey"        int4           NOT NULL,
+    "ParentDepartmentGroupKey"  int4,
+    "DepartmentGroupName"       varchar(50),
+    CONSTRAINT "PK_DimDepartmentGroup" PRIMARY KEY ("DepartmentGroupKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimEmployee" 
+--
+
+CREATE TABLE "DimEmployee"(
+    "EmployeeKey"                           int4            NOT NULL,
+    "ParentEmployeeKey"                     int4,
+    "EmployeeNationalIDAlternateKey"        varchar(15),
+    "ParentEmployeeNationalIDAlternateKey"  varchar(15),
+    "SalesTerritoryKey"                     int4,
+    "FirstName"                             varchar(50)     NOT NULL,
+    "LastName"                              varchar(50)     NOT NULL,
+    "MiddleName"                            varchar(50),
+    "NameStyle"                             boolean         NOT NULL,
+    "Title"                                 varchar(50),
+    "HireDate"                              date,
+    "BirthDate"                             date,
+    "LoginID"                               varchar(256),
+    "EmailAddress"                          varchar(50),
+    "Phone"                                 varchar(25),
+    "MaritalStatus"                         char(1),
+    "EmergencyContactName"                  varchar(50),
+    "EmergencyContactPhone"                 varchar(25),
+    "SalariedFlag"                          boolean,
+    "Gender"                                char(1),
+    "PayFrequency"                          int2,
+    "BaseRate"                              money,
+    "VacationHours"                         int2,
+    "SickLeaveHours"                        int2,
+    "CurrentFlag"                           boolean         NOT NULL,
+    "SalesPersonFlag"                       boolean         NOT NULL,
+    "DepartmentName"                        varchar(50),
+    "StartDate"                             date,
+    "EndDate"                               date,
+    "Status"                                varchar(50),
+    "EmployeePhoto"                         bytea,
+    CONSTRAINT "PK_DimEmployee_EmployeeKey" PRIMARY KEY ("EmployeeKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimGeography" 
+--
+
+CREATE TABLE "DimGeography"(
+    "GeographyKey"              int4           NOT NULL,
+    "City"                      varchar(30),
+    "StateProvinceCode"         varchar(3),
+    "StateProvinceName"         varchar(50),
+    "CountryRegionCode"         varchar(3),
+    "EnglishCountryRegionName"  varchar(50),
+    "SpanishCountryRegionName"  varchar(50),
+    "FrenchCountryRegionName"   varchar(50),
+    "PostalCode"                varchar(15),
+    "SalesTerritoryKey"         int4,
+    "IpAddressLocator"          varchar(15),
+    CONSTRAINT "PK_DimGeography_GeographyKey" PRIMARY KEY ("GeographyKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimOrganization" 
+--
+
+CREATE TABLE "DimOrganization"(
+    "OrganizationKey"        int4           NOT NULL,
+    "ParentOrganizationKey"  int4,
+    "PercentageOfOwnership"  varchar(16),
+    "OrganizationName"       varchar(50),
+    "CurrencyKey"            int4,
+    CONSTRAINT "PK_DimOrganization" PRIMARY KEY ("OrganizationKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimProduct" 
+--
+
+CREATE TABLE "DimProduct"(
+    "ProductKey"             int4            NOT NULL,
+    "ProductAlternateKey"    varchar(25),
+    "ProductSubcategoryKey"  int4,
+    "WeightUnitMeasureCode"  char(3),
+    "SizeUnitMeasureCode"    char(3),
+    "EnglishProductName"     varchar(50)     NOT NULL,
+    "SpanishProductName"     varchar(50)     NOT NULL,
+    "FrenchProductName"      varchar(50)     NOT NULL,
+    "StandardCost"           money,
+    "FinishedGoodsFlag"      boolean         NOT NULL,
+    "Color"                  varchar(15)     NOT NULL,
+    "SafetyStockLevel"       int2,
+    "ReorderPoint"           int2,
+    "ListPrice"              money,
+    "Size"                   varchar(50),
+    "SizeRange"              varchar(50),
+    "Weight"                 float4,
+    "DaysToManufacture"      int4,
+    "ProductLine"            char(2),
+    "DealerPrice"            money,
+    "Class"                  char(2),
+    "Style"                  char(2),
+    "ModelName"              varchar(50),
+    "LargePhoto"             bytea,
+    "EnglishDescription"     varchar(400),
+    "FrenchDescription"      varchar(400),
+    "ChineseDescription"     varchar(400),
+    "ArabicDescription"      varchar(400),
+    "HebrewDescription"      varchar(400),
+    "ThaiDescription"        varchar(400),
+    "GermanDescription"      varchar(400),
+    "JapaneseDescription"    varchar(400),
+    "TurkishDescription"     varchar(400),
+    "StartDate"              timestamp,
+    "EndDate"                timestamp,
+    "Status"                 varchar(7),
+    CONSTRAINT "PK_DimProduct_ProductKey" PRIMARY KEY ("ProductKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimProductCategory" 
+--
+
+CREATE TABLE "DimProductCategory"(
+    "ProductCategoryKey"           int4           NOT NULL,
+    "ProductCategoryAlternateKey"  int4,
+    "EnglishProductCategoryName"   varchar(50)    NOT NULL,
+    "SpanishProductCategoryName"   varchar(50)    NOT NULL,
+    "FrenchProductCategoryName"    varchar(50)    NOT NULL,
+    CONSTRAINT "PK_DimProductCategory_ProductCategoryKey" PRIMARY KEY ("ProductCategoryKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimProductSubcategory" 
+--
+
+CREATE TABLE "DimProductSubcategory"(
+    "ProductSubcategoryKey"           int4           NOT NULL,
+    "ProductSubcategoryAlternateKey"  int4,
+    "EnglishProductSubcategoryName"   varchar(50)    NOT NULL,
+    "SpanishProductSubcategoryName"   varchar(50)    NOT NULL,
+    "FrenchProductSubcategoryName"    varchar(50)    NOT NULL,
+    "ProductCategoryKey"              int4,
+    CONSTRAINT "PK_DimProductSubcategory_ProductSubcategoryKey" PRIMARY KEY ("ProductSubcategoryKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimPromotion" 
+--
+
+CREATE TABLE "DimPromotion"(
+    "PromotionKey"              int4            NOT NULL,
+    "PromotionAlternateKey"     int4,
+    "EnglishPromotionName"      varchar(255),
+    "SpanishPromotionName"      varchar(255),
+    "FrenchPromotionName"       varchar(255),
+    "DiscountPct"               float4,
+    "EnglishPromotionType"      varchar(50),
+    "SpanishPromotionType"      varchar(50),
+    "FrenchPromotionType"       varchar(50),
+    "EnglishPromotionCategory"  varchar(50),
+    "SpanishPromotionCategory"  varchar(50),
+    "FrenchPromotionCategory"   varchar(50),
+    "StartDate"                 timestamp       NOT NULL,
+    "EndDate"                   timestamp,
+    "MinQty"                    int4,
+    "MaxQty"                    int4,
+    CONSTRAINT "PK_DimPromotion_PromotionKey" PRIMARY KEY ("PromotionKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimReseller" 
+--
+
+CREATE TABLE "DimReseller"(
+    "ResellerKey"           int4           NOT NULL,
+    "GeographyKey"          int4,
+    "ResellerAlternateKey"  varchar(15),
+    "Phone"                 varchar(25),
+    "BusinessType"          varchar(20)    NOT NULL,
+    "ResellerName"          varchar(50)    NOT NULL,
+    "NumberEmployees"       int4,
+    "OrderFrequency"        char(1),
+    "OrderMonth"            int2,
+    "FirstOrderYear"        int4,
+    "LastOrderYear"         int4,
+    "ProductLine"           varchar(50),
+    "AddressLine1"          varchar(60),
+    "AddressLine2"          varchar(60),
+    "AnnualSales"           money,
+    "BankName"              varchar(50),
+    "MinPaymentType"        int2,
+    "MinPaymentAmount"      money,
+    "AnnualRevenue"         money,
+    "YearOpened"            int4,
+    CONSTRAINT "PK_DimReseller_ResellerKey" PRIMARY KEY ("ResellerKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimSalesReason" 
+--
+
+CREATE TABLE "DimSalesReason"(
+    "SalesReasonKey"           int4           NOT NULL,
+    "SalesReasonAlternateKey"  int4           NOT NULL,
+    "SalesReasonName"          varchar(50)    NOT NULL,
+    "SalesReasonReasonType"    varchar(50)    NOT NULL,
+    CONSTRAINT "PK_DimSalesReason_SalesReasonKey" PRIMARY KEY ("SalesReasonKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimSalesTerritory" 
+--
+
+CREATE TABLE "DimSalesTerritory"(
+    "SalesTerritoryKey"           int4           NOT NULL,
+    "SalesTerritoryAlternateKey"  int4,
+    "SalesTerritoryRegion"        varchar(50)    NOT NULL,
+    "SalesTerritoryCountry"       varchar(50)    NOT NULL,
+    "SalesTerritoryGroup"         varchar(50),
+    "SalesTerritoryImage"         bytea,
+    CONSTRAINT "PK_DimSalesTerritory_SalesTerritoryKey" PRIMARY KEY ("SalesTerritoryKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "DimScenario" 
+--
+
+CREATE TABLE "DimScenario"(
+    "ScenarioKey"   int4           NOT NULL,
+    "ScenarioName"  varchar(50),
+    CONSTRAINT "PK_DimScenario" PRIMARY KEY ("ScenarioKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "FactAdditionalInternationalProductDescription" 
+--
+
+CREATE TABLE "FactAdditionalInternationalProductDescription"(
+    "ProductKey"          int4             NOT NULL,
+    "CultureName"         varchar(50)      NOT NULL,
+    "ProductDescription"  varchar(4000)    NOT NULL,
+    CONSTRAINT "PK_FactAdditionalInternationalProductDescription_ProductKey_CultureName" PRIMARY KEY ("ProductKey", "CultureName")
+)
+;
+
+
+
+-- 
+-- TABLE: "FactCallCenter" 
+--
+
+CREATE TABLE "FactCallCenter"(
+    "FactCallCenterID"     int4           NOT NULL,
+    "DateKey"              int4           NOT NULL,
+    "WageType"             varchar(15)    NOT NULL,
+    "Shift"                varchar(20)    NOT NULL,
+    "LevelOneOperators"    int2           NOT NULL,
+    "LevelTwoOperators"    int2           NOT NULL,
+    "TotalOperators"       int2           NOT NULL,
+    "Calls"                int4           NOT NULL,
+    "AutomaticResponses"   int4           NOT NULL,
+    "Orders"               int4           NOT NULL,
+    "IssuesRaised"         int2           NOT NULL,
+    "AverageTimePerIssue"  int2           NOT NULL,
+    "ServiceGrade"         float4         NOT NULL,
+    "Date"                 timestamp,
+    CONSTRAINT "PK_FactCallCenter_FactCallCenterID" PRIMARY KEY ("FactCallCenterID")
+)
+;
+
+
+
+-- 
+-- TABLE: "FactCurrencyRate" 
+--
+
+CREATE TABLE "FactCurrencyRate"(
+    "CurrencyKey"   int4         NOT NULL,
+    "DateKey"       int4         NOT NULL,
+    "AverageRate"   float4       NOT NULL,
+    "EndOfDayRate"  float4       NOT NULL,
+    "Date"          timestamp,
+    CONSTRAINT "PK_FactCurrencyRate_CurrencyKey_DateKey" PRIMARY KEY ("CurrencyKey", "DateKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "FactFinance" 
+--
+
+CREATE TABLE "FactFinance"(
+    "FinanceKey"          int4         NOT NULL,
+    "DateKey"             int4         NOT NULL,
+    "OrganizationKey"     int4         NOT NULL,
+    "DepartmentGroupKey"  int4         NOT NULL,
+    "ScenarioKey"         int4         NOT NULL,
+    "AccountKey"          int4         NOT NULL,
+    "Amount"              float4       NOT NULL,
+    "Date"                timestamp
+)
+;
+
+
+
+-- 
+-- TABLE: "FactInternetSales" 
+--
+
+CREATE TABLE "FactInternetSales"(
+    "ProductKey"             int4           NOT NULL,
+    "OrderDateKey"           int4           NOT NULL,
+    "DueDateKey"             int4           NOT NULL,
+    "ShipDateKey"            int4           NOT NULL,
+    "CustomerKey"            int4           NOT NULL,
+    "PromotionKey"           int4           NOT NULL,
+    "CurrencyKey"            int4           NOT NULL,
+    "SalesTerritoryKey"      int4           NOT NULL,
+    "SalesOrderNumber"       varchar(20)    NOT NULL,
+    "SalesOrderLineNumber"   int2           NOT NULL,
+    "RevisionNumber"         int2           NOT NULL,
+    "OrderQuantity"          int2           NOT NULL,
+    "UnitPrice"              money          NOT NULL,
+    "ExtendedAmount"         money          NOT NULL,
+    "UnitPriceDiscountPct"   float4         NOT NULL,
+    "DiscountAmount"         float4         NOT NULL,
+    "ProductStandardCost"    money          NOT NULL,
+    "TotalProductCost"       money          NOT NULL,
+    "SalesAmount"            money          NOT NULL,
+    "TaxAmt"                 money          NOT NULL,
+    "Freight"                money          NOT NULL,
+    "CarrierTrackingNumber"  varchar(25),
+    "CustomerPONumber"       varchar(25),
+    "OrderDate"              timestamp,
+    "DueDate"                timestamp,
+    "ShipDate"               timestamp,
+    CONSTRAINT "PK_FactInternetSales_SalesOrderNumber_SalesOrderLineNumber" PRIMARY KEY ("SalesOrderNumber", "SalesOrderLineNumber")
+)
+;
+
+
+
+-- 
+-- TABLE: "FactInternetSalesReason" 
+--
+
+CREATE TABLE "FactInternetSalesReason"(
+    "SalesOrderNumber"      varchar(20)    NOT NULL,
+    "SalesOrderLineNumber"  int2           NOT NULL,
+    "SalesReasonKey"        int4           NOT NULL,
+    CONSTRAINT "PK_FactInternetSalesReason_SalesOrderNumber_SalesOrderLineNumber_SalesReasonKey" PRIMARY KEY ("SalesOrderNumber", "SalesOrderLineNumber", "SalesReasonKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "FactProductInventory" 
+--
+
+CREATE TABLE "FactProductInventory"(
+    "ProductKey"    int4     NOT NULL,
+    "DateKey"       int4     NOT NULL,
+    "MovementDate"  date     NOT NULL,
+    "UnitCost"      money    NOT NULL,
+    "UnitsIn"       int4     NOT NULL,
+    "UnitsOut"      int4     NOT NULL,
+    "UnitsBalance"  int4     NOT NULL,
+    CONSTRAINT "PK_FactProductInventory" PRIMARY KEY ("ProductKey", "DateKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "FactResellerSales" 
+--
+
+CREATE TABLE "FactResellerSales"(
+    "ProductKey"             int4           NOT NULL,
+    "OrderDateKey"           int4           NOT NULL,
+    "DueDateKey"             int4           NOT NULL,
+    "ShipDateKey"            int4           NOT NULL,
+    "ResellerKey"            int4           NOT NULL,
+    "EmployeeKey"            int4           NOT NULL,
+    "PromotionKey"           int4           NOT NULL,
+    "CurrencyKey"            int4           NOT NULL,
+    "SalesTerritoryKey"      int4           NOT NULL,
+    "SalesOrderNumber"       varchar(20)    NOT NULL,
+    "SalesOrderLineNumber"   int2           NOT NULL,
+    "RevisionNumber"         int2,
+    "OrderQuantity"          int2,
+    "UnitPrice"              money,
+    "ExtendedAmount"         money,
+    "UnitPriceDiscountPct"   float4,
+    "DiscountAmount"         float4,
+    "ProductStandardCost"    money,
+    "TotalProductCost"       money,
+    "SalesAmount"            money,
+    "TaxAmt"                 money,
+    "Freight"                money,
+    "CarrierTrackingNumber"  varchar(25),
+    "CustomerPONumber"       varchar(25),
+    "OrderDate"              timestamp,
+    "DueDate"                timestamp,
+    "ShipDate"               timestamp,
+    CONSTRAINT "PK_FactResellerSales_SalesOrderNumber_SalesOrderLineNumber" PRIMARY KEY ("SalesOrderNumber", "SalesOrderLineNumber")
+)
+;
+
+
+
+-- 
+-- TABLE: "FactSalesQuota" 
+--
+
+CREATE TABLE "FactSalesQuota"(
+    "SalesQuotaKey"     int4         NOT NULL,
+    "EmployeeKey"       int4         NOT NULL,
+    "DateKey"           int4         NOT NULL,
+    "CalendarYear"      int2         NOT NULL,
+    "CalendarQuarter"   int2         NOT NULL,
+    "SalesAmountQuota"  money        NOT NULL,
+    "Date"              timestamp,
+    CONSTRAINT "PK_FactSalesQuota_SalesQuotaKey" PRIMARY KEY ("SalesQuotaKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "FactSurveyResponse" 
+--
+
+CREATE TABLE "FactSurveyResponse"(
+    "SurveyResponseKey"              int4           NOT NULL,
+    "DateKey"                        int4           NOT NULL,
+    "CustomerKey"                    int4           NOT NULL,
+    "ProductCategoryKey"             int4           NOT NULL,
+    "EnglishProductCategoryName"     varchar(50)    NOT NULL,
+    "ProductSubcategoryKey"          int4           NOT NULL,
+    "EnglishProductSubcategoryName"  varchar(50)    NOT NULL,
+    "Date"                           timestamp,
+    CONSTRAINT "PK_FactSurveyResponse_SurveyResponseKey" PRIMARY KEY ("SurveyResponseKey")
+)
+;
+
+
+
+-- 
+-- TABLE: "NewFactCurrencyRate" 
+--
+
+CREATE TABLE "NewFactCurrencyRate"(
+    "AverageRate"   real,
+    "CurrencyID"    varchar(3),
+    "CurrencyDate"  date,
+    "EndOfDayRate"  real,
+    "CurrencyKey"   int4,
+    "DateKey"       int4
+)
+;
+
+
+
+-- 
+-- TABLE: "ProspectiveBuyer" 
+--
+
+CREATE TABLE "ProspectiveBuyer"(
+    "ProspectiveBuyerKey"   int4            NOT NULL,
+    "ProspectAlternateKey"  varchar(15),
+    "FirstName"             varchar(50),
+    "MiddleName"            varchar(50),
+    "LastName"              varchar(50),
+    "BirthDate"             timestamp,
+    "MaritalStatus"         char(1),
+    "Gender"                varchar(1),
+    "EmailAddress"          varchar(50),
+    "YearlyIncome"          money,
+    "TotalChildren"         int2,
+    "NumberChildrenAtHome"  int2,
+    "Education"             varchar(40),
+    "Occupation"            varchar(100),
+    "HouseOwnerFlag"        char(1),
+    "NumberCarsOwned"       int2,
+    "AddressLine1"          varchar(120),
+    "AddressLine2"          varchar(120),
+    "City"                  varchar(30),
+    "StateProvinceCode"     varchar(3),
+    "PostalCode"            varchar(15),
+    "Phone"                 varchar(20),
+    "Salutation"            varchar(8),
+    "Unknown"               int4,
+    CONSTRAINT "PK_ProspectiveBuyer_ProspectiveBuyerKey" PRIMARY KEY ("ProspectiveBuyerKey")
+)
+;
+
+
+
+-- 
+-- TABLE: sysdiagrams 
+--
+
+CREATE TABLE sysdiagrams(
+    name            char(10)    NOT NULL,
+    principal_id    int4        NOT NULL,
+    diagram_id      int4        NOT NULL,
+    version         int4,
+    definition      bytea,
+    CONSTRAINT "PK__sysdiagr__C2B05B616B24EA82" PRIMARY KEY (diagram_id)
+)
+;
+
+
+
+-- 
+-- TABLE: "DimAccount" 
+--
+
+ALTER TABLE "DimAccount" ADD CONSTRAINT "FK_DimAccount_DimAccount" 
+    FOREIGN KEY ("ParentAccountKey")
+    REFERENCES "DimAccount"("AccountKey")
+;
+
+
+-- 
+-- TABLE: "DimCustomer" 
+--
+
+ALTER TABLE "DimCustomer" ADD CONSTRAINT "FK_DimCustomer_DimGeography" 
+    FOREIGN KEY ("GeographyKey")
+    REFERENCES "DimGeography"("GeographyKey")
+;
+
+
+-- 
+-- TABLE: "DimDepartmentGroup" 
+--
+
+ALTER TABLE "DimDepartmentGroup" ADD CONSTRAINT "FK_DimDepartmentGroup_DimDepartmentGroup" 
+    FOREIGN KEY ("ParentDepartmentGroupKey")
+    REFERENCES "DimDepartmentGroup"("DepartmentGroupKey")
+;
+
+
+-- 
+-- TABLE: "DimEmployee" 
+--
+
+ALTER TABLE "DimEmployee" ADD CONSTRAINT "FK_DimEmployee_DimEmployee" 
+    FOREIGN KEY ("ParentEmployeeKey")
+    REFERENCES "DimEmployee"("EmployeeKey")
+;
+
+ALTER TABLE "DimEmployee" ADD CONSTRAINT "FK_DimEmployee_DimSalesTerritory" 
+    FOREIGN KEY ("SalesTerritoryKey")
+    REFERENCES "DimSalesTerritory"("SalesTerritoryKey")
+;
+
+
+-- 
+-- TABLE: "DimGeography" 
+--
+
+ALTER TABLE "DimGeography" ADD CONSTRAINT "FK_DimGeography_DimSalesTerritory" 
+    FOREIGN KEY ("SalesTerritoryKey")
+    REFERENCES "DimSalesTerritory"("SalesTerritoryKey")
+;
+
+
+-- 
+-- TABLE: "DimOrganization" 
+--
+
+ALTER TABLE "DimOrganization" ADD CONSTRAINT "FK_DimOrganization_DimCurrency" 
+    FOREIGN KEY ("CurrencyKey")
+    REFERENCES "DimCurrency"("CurrencyKey")
+;
+
+ALTER TABLE "DimOrganization" ADD CONSTRAINT "FK_DimOrganization_DimOrganization" 
+    FOREIGN KEY ("ParentOrganizationKey")
+    REFERENCES "DimOrganization"("OrganizationKey")
+;
+
+
+-- 
+-- TABLE: "DimProduct" 
+--
+
+ALTER TABLE "DimProduct" ADD CONSTRAINT "FK_DimProduct_DimProductSubcategory" 
+    FOREIGN KEY ("ProductSubcategoryKey")
+    REFERENCES "DimProductSubcategory"("ProductSubcategoryKey")
+;
+
+
+-- 
+-- TABLE: "DimProductSubcategory" 
+--
+
+ALTER TABLE "DimProductSubcategory" ADD CONSTRAINT "FK_DimProductSubcategory_DimProductCategory" 
+    FOREIGN KEY ("ProductCategoryKey")
+    REFERENCES "DimProductCategory"("ProductCategoryKey")
+;
+
+
+-- 
+-- TABLE: "DimReseller" 
+--
+
+ALTER TABLE "DimReseller" ADD CONSTRAINT "FK_DimReseller_DimGeography" 
+    FOREIGN KEY ("GeographyKey")
+    REFERENCES "DimGeography"("GeographyKey")
+;
+
+
+-- 
+-- TABLE: "FactCallCenter" 
+--
+
+ALTER TABLE "FactCallCenter" ADD CONSTRAINT "FK_FactCallCenter_DimDate" 
+    FOREIGN KEY ("DateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+
+-- 
+-- TABLE: "FactCurrencyRate" 
+--
+
+ALTER TABLE "FactCurrencyRate" ADD CONSTRAINT "FK_FactCurrencyRate_DimCurrency" 
+    FOREIGN KEY ("CurrencyKey")
+    REFERENCES "DimCurrency"("CurrencyKey")
+;
+
+ALTER TABLE "FactCurrencyRate" ADD CONSTRAINT "FK_FactCurrencyRate_DimDate" 
+    FOREIGN KEY ("DateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+
+-- 
+-- TABLE: "FactFinance" 
+--
+
+ALTER TABLE "FactFinance" ADD CONSTRAINT "FK_FactFinance_DimAccount" 
+    FOREIGN KEY ("AccountKey")
+    REFERENCES "DimAccount"("AccountKey")
+;
+
+ALTER TABLE "FactFinance" ADD CONSTRAINT "FK_FactFinance_DimDate" 
+    FOREIGN KEY ("DateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+ALTER TABLE "FactFinance" ADD CONSTRAINT "FK_FactFinance_DimDepartmentGroup" 
+    FOREIGN KEY ("DepartmentGroupKey")
+    REFERENCES "DimDepartmentGroup"("DepartmentGroupKey")
+;
+
+ALTER TABLE "FactFinance" ADD CONSTRAINT "FK_FactFinance_DimOrganization" 
+    FOREIGN KEY ("OrganizationKey")
+    REFERENCES "DimOrganization"("OrganizationKey")
+;
+
+ALTER TABLE "FactFinance" ADD CONSTRAINT "FK_FactFinance_DimScenario" 
+    FOREIGN KEY ("ScenarioKey")
+    REFERENCES "DimScenario"("ScenarioKey")
+;
+
+
+-- 
+-- TABLE: "FactInternetSales" 
+--
+
+ALTER TABLE "FactInternetSales" ADD CONSTRAINT "FK_FactInternetSales_DimCurrency" 
+    FOREIGN KEY ("CurrencyKey")
+    REFERENCES "DimCurrency"("CurrencyKey")
+;
+
+ALTER TABLE "FactInternetSales" ADD CONSTRAINT "FK_FactInternetSales_DimCustomer" 
+    FOREIGN KEY ("CustomerKey")
+    REFERENCES "DimCustomer"("CustomerKey")
+;
+
+ALTER TABLE "FactInternetSales" ADD CONSTRAINT "FK_FactInternetSales_DimDate" 
+    FOREIGN KEY ("OrderDateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+ALTER TABLE "FactInternetSales" ADD CONSTRAINT "FK_FactInternetSales_DimDate1" 
+    FOREIGN KEY ("DueDateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+ALTER TABLE "FactInternetSales" ADD CONSTRAINT "FK_FactInternetSales_DimDate2" 
+    FOREIGN KEY ("ShipDateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+ALTER TABLE "FactInternetSales" ADD CONSTRAINT "FK_FactInternetSales_DimProduct" 
+    FOREIGN KEY ("ProductKey")
+    REFERENCES "DimProduct"("ProductKey")
+;
+
+ALTER TABLE "FactInternetSales" ADD CONSTRAINT "FK_FactInternetSales_DimPromotion" 
+    FOREIGN KEY ("PromotionKey")
+    REFERENCES "DimPromotion"("PromotionKey")
+;
+
+ALTER TABLE "FactInternetSales" ADD CONSTRAINT "FK_FactInternetSales_DimSalesTerritory" 
+    FOREIGN KEY ("SalesTerritoryKey")
+    REFERENCES "DimSalesTerritory"("SalesTerritoryKey")
+;
+
+
+-- 
+-- TABLE: "FactInternetSalesReason" 
+--
+
+ALTER TABLE "FactInternetSalesReason" ADD CONSTRAINT "FK_FactInternetSalesReason_DimSalesReason" 
+    FOREIGN KEY ("SalesReasonKey")
+    REFERENCES "DimSalesReason"("SalesReasonKey")
+;
+
+ALTER TABLE "FactInternetSalesReason" ADD CONSTRAINT "FK_FactInternetSalesReason_FactInternetSales" 
+    FOREIGN KEY ("SalesOrderNumber", "SalesOrderLineNumber")
+    REFERENCES "FactInternetSales"("SalesOrderNumber", "SalesOrderLineNumber")
+;
+
+
+-- 
+-- TABLE: "FactProductInventory" 
+--
+
+ALTER TABLE "FactProductInventory" ADD CONSTRAINT "FK_FactProductInventory_DimDate" 
+    FOREIGN KEY ("DateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+ALTER TABLE "FactProductInventory" ADD CONSTRAINT "FK_FactProductInventory_DimProduct" 
+    FOREIGN KEY ("ProductKey")
+    REFERENCES "DimProduct"("ProductKey")
+;
+
+
+-- 
+-- TABLE: "FactResellerSales" 
+--
+
+ALTER TABLE "FactResellerSales" ADD CONSTRAINT "FK_FactResellerSales_DimCurrency" 
+    FOREIGN KEY ("CurrencyKey")
+    REFERENCES "DimCurrency"("CurrencyKey")
+;
+
+ALTER TABLE "FactResellerSales" ADD CONSTRAINT "FK_FactResellerSales_DimDate" 
+    FOREIGN KEY ("OrderDateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+ALTER TABLE "FactResellerSales" ADD CONSTRAINT "FK_FactResellerSales_DimDate1" 
+    FOREIGN KEY ("DueDateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+ALTER TABLE "FactResellerSales" ADD CONSTRAINT "FK_FactResellerSales_DimDate2" 
+    FOREIGN KEY ("ShipDateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+ALTER TABLE "FactResellerSales" ADD CONSTRAINT "FK_FactResellerSales_DimEmployee" 
+    FOREIGN KEY ("EmployeeKey")
+    REFERENCES "DimEmployee"("EmployeeKey")
+;
+
+ALTER TABLE "FactResellerSales" ADD CONSTRAINT "FK_FactResellerSales_DimProduct" 
+    FOREIGN KEY ("ProductKey")
+    REFERENCES "DimProduct"("ProductKey")
+;
+
+ALTER TABLE "FactResellerSales" ADD CONSTRAINT "FK_FactResellerSales_DimPromotion" 
+    FOREIGN KEY ("PromotionKey")
+    REFERENCES "DimPromotion"("PromotionKey")
+;
+
+ALTER TABLE "FactResellerSales" ADD CONSTRAINT "FK_FactResellerSales_DimReseller" 
+    FOREIGN KEY ("ResellerKey")
+    REFERENCES "DimReseller"("ResellerKey")
+;
+
+ALTER TABLE "FactResellerSales" ADD CONSTRAINT "FK_FactResellerSales_DimSalesTerritory" 
+    FOREIGN KEY ("SalesTerritoryKey")
+    REFERENCES "DimSalesTerritory"("SalesTerritoryKey")
+;
+
+
+-- 
+-- TABLE: "FactSalesQuota" 
+--
+
+ALTER TABLE "FactSalesQuota" ADD CONSTRAINT "FK_FactSalesQuota_DimDate" 
+    FOREIGN KEY ("DateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+ALTER TABLE "FactSalesQuota" ADD CONSTRAINT "FK_FactSalesQuota_DimEmployee" 
+    FOREIGN KEY ("EmployeeKey")
+    REFERENCES "DimEmployee"("EmployeeKey")
+;
+
+
+-- 
+-- TABLE: "FactSurveyResponse" 
+--
+
+ALTER TABLE "FactSurveyResponse" ADD CONSTRAINT "FK_FactSurveyResponse_CustomerKey" 
+    FOREIGN KEY ("CustomerKey")
+    REFERENCES "DimCustomer"("CustomerKey")
+;
+
+ALTER TABLE "FactSurveyResponse" ADD CONSTRAINT "FK_FactSurveyResponse_DateKey" 
+    FOREIGN KEY ("DateKey")
+    REFERENCES "DimDate"("DateKey")
+;
+
+
